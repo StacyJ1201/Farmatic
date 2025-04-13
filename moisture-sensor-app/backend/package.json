@@ -1,24 +1,32 @@
 {
-  "name": "moisture-sensor-app",
+  "name": "moisture-sensor-backend",
   "version": "1.0.0",
-  "description": "A full-stack application to display moisture sensor data from an Arduino.",
+  "description": "Backend for Arduino moisture sensor application",
   "main": "src/server.js",
+  "type": "module",
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js"
   },
+  "keywords": [
+    "arduino",
+    "moisture",
+    "sensor",
+    "node",
+    "express"
+  ],
+  "author": "",
+  "license": "ISC",
   "dependencies": {
-    "axios": "^1.8.4",
-    "body-parser": "^1.20.3",
+    "@serialport/parser-readline": "^11.0.0",
+    "axios": "^1.6.0",
     "cors": "^2.8.5",
-    "express": "^4.21.2",
-    "mongoose": "^5.13.23",
-    "serialport": "^13.0.0"
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "mongoose": "^7.6.3",
+    "serialport": "^11.0.0"
   },
   "devDependencies": {
-    "nodemon": "^2.0.4"
-  },
-  "author": "Your Name",
-  "license": "MIT",
-  "keywords": []
+    "nodemon": "^3.0.1"
+  }
 }

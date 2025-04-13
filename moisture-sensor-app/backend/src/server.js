@@ -1,37 +1,40 @@
 import express from "express";
 import mongoose from "mongoose";
-import bodyParser from "body-parser";
-import SensorData from "./models/sensorData.js";
-import SensorController from "./controllers/sensorController.js";
+import cors from "cors";
+import dotenv from "dotenv";
 import sensorRoutes from "./routes/sensorRoutes.js";
+// Import model to ensure it's registered before use
+import "./models/sensorData.js";
+
+// Load environment variables
+dotenv.config();
 
 const app = express();
-const PORT = 8081;
+const PORT = process.env.PORT || 8081;
 
 // Middleware
-app.use(bodyParser.json());
+app.use(cors());
+app.use(express.json());
 
-// Database connection
-mongoose
-  .connect("mongodb://localhost:27017/moistureSensorDB", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true,
-  })
-  .then(() => console.log("Connected to MongoDB"))
-  .catch((error) => console.error("Error connecting to MongoDB:", error));
-
-// Add a root route
+// Add a simple test route
 app.get("/", (req, res) => {
-  res.send("Welcome to the Moisture Sensor API!");
+  res.send("Moisture Sensor API is running");
 });
-
-// Initialize controller
-const sensorController = new SensorController(SensorData);
 
 // Routes
-app.use("/api/sensor-data", sensorRoutes(sensorController));
+app.use("/api", sensorRoutes);
 
-// Start server
-app.listen(PORT, () => {
-  console.log(`Server is running on http://localhost:${PORT}`);
-});
+// Connect to MongoDB
+mongoose
+  .connect(
+    process.env.MONGO_URI || "mongodb://localhost:27017/moisture-sensor-db"
+  )
+  .then(() => {
+    console.log("Connected to MongoDB");
+    app.listen(PORT, () => {
+      console.log(`Server running on port ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+  });

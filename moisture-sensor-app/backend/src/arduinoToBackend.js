@@ -1,12 +1,15 @@
-import SerialPort from "serialport";
-import Readline from "@serialport/parser-readline";
+import { SerialPort } from "serialport";
+import { ReadlineParser } from "@serialport/parser-readline";
 import axios from "axios";
 
-// Replace '/dev/ttyUSB0' with your Arduino's serial port
-const port = new SerialPort("/dev/ttyUSB0", { baudRate: 9600 });
+// Fix the port path - remove the double "/dev//dev"
+const port = new SerialPort({
+  path: "/dev/tty.usbmodem1201",
+  baudRate: 9600,
+});
 
 // Use a parser to read lines of data
-const parser = port.pipe(new Readline({ delimiter: "\n" }));
+const parser = port.pipe(new ReadlineParser({ delimiter: "\n" }));
 
 // Open the port
 port.on("open", () => {
@@ -19,7 +22,7 @@ parser.on("data", async (data) => {
 
   try {
     // Send the data to your backend API
-    const response = await axios.post("http://localhost:5000/api/sensor-data", {
+    const response = await axios.post("http://localhost:8081/api/sensor-data", {
       moistureLevel: parseInt(data, 10), // Convert string to integer
     });
     console.log("Data sent to backend:", response.data);
